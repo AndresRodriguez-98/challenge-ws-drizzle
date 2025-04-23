@@ -1,12 +1,12 @@
-import { Insert, Select, users } from "./schema";
+import { Insert, Select, counter } from "./schema";
 import { supabase } from "./supabase";
 
-export async function InsertUsers(userEmail: Insert[]): Promise<Insert[]> {
-  const insertedUsersData = await supabase.insert(users).values(userEmail).returning();
-    return insertedUsersData;
+export async function InsertValue(counterValue: Insert[]): Promise<Insert[]> {
+  const insertedValueData = await supabase.insert(counter).values(counterValue).returning();
+    return insertedValueData;
 }
 
-export async function SelectUsers(): Promise<Select[]> {
-  const usersData = await supabase.select().from(users);
-    return usersData;
+export async function SelectCounter(): Promise<Select[]> {
+  const valueData = await supabase.select().from(counter);
+    return valueData;
 }

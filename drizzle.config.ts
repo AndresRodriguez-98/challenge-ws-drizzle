@@ -1,13 +1,13 @@
-import type { Config } from "drizzle-kit";
-import "dotenv/config"
+import 'dotenv/config';
+import { defineConfig } from 'drizzle-kit';
 
 const databaseURL = process.env["DATABASE_URL"];
  
-export default {
-  schema: "./src/db/schema.ts",
-  out: "./drizzle",
-  driver: "pg",
+export default defineConfig({
+  out: './drizzle',
+  schema: './src/db/schema.ts',
+  dialect: 'postgresql',
   dbCredentials: {
-    connectionString: databaseURL,
-  }
-} satisfies Config;
+    url: process.env.DATABASE_URL!,
+  },
+});

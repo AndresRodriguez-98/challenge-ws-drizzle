@@ -1,12 +1,13 @@
-import { InsertUsers } from "@/db/Queries";
+import { InsertValue} from "@/db/Queries";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { userEmail } = await request.json();
+  const { counterValue } = await request.json();
   try {
-    const res = await InsertUsers([
+    const res = await InsertValue([
       {
-        email: userEmail,
+        value: counterValue,
+        createdAt: 4000000000, // Cambiar esto por el valor real de createdAt
       },
     ]);
 
