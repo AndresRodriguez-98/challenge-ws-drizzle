@@ -1,55 +1,77 @@
-"use client";
+'use client';
 
-import { FormEvent, useState } from "react";
+import React, { useState, useEffect } from "react";
+import ReactLoading from "react-loading"; // Importamos la librería
 
-export default function Form() {
-  const [counterValue, setCounterValue] = useState<number | string>("");
+export default function Counter() {
+  const [count, setCount] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(true);
 
-  // Validamos que el número esté presente y sea un número válido
-  const isFormValid: Boolean = counterValue !== "" && !isNaN(Number(counterValue));
+  useEffect(() => {
+    const fetchValue = async () => {
+      const res = await fetch("/api/get");
+      const data = await res.json();
 
-  const formHandler = async (e: FormEvent) => {
-    e.preventDefault();
+      if (data.length > 0) {
+        setCount(data[0].value);
+      }
+      setIsSubmitting(false); // Aseguramos que esto se ejecute después del setTimeout
 
-    // Hacemos el fetch para enviar el número a la base de datos
+    };
+
+    fetchValue();
+  }, []);
+
+  const updateCount = async (newValue: number) => {
+    setIsSubmitting(true);
     const res = await fetch("/api/insert", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ counterValue }),
+      body: JSON.stringify({ counterValue: newValue }),
     });
 
     if (res.ok) {
-      setCounterValue("");  // Limpiamos el valor si la inserción fue exitosa
+      setCount(newValue);
+    } else {
+      console.error("Error al actualizar el contador");
     }
 
-    if (!res.ok) {
-      // Mantener el valor del input si hubo algún error
-      console.error("Error al insertar el número");
-    }
+    setIsSubmitting(false);
   };
 
   return (
-    <form onSubmit={formHandler} className={"my-6"}>
-      <input
-        className={"bg-neutral-900 rounded-xl py-3 px-4"}
-        type={"number"}  // Cambiamos a tipo "number"
-        name={"counterValue"}
-        placeholder={"Enter number"}
-        required={true}
-        value={counterValue}
-        onChange={(e) => setCounterValue(e.target.value)}  // Actualizamos el estado con el valor del input
-      />
+    <div className="flex items-center gap-6 my-8">
       <button
-        className={
-          "bg-white text-black rounded-xl py-2 px-4 mx-3 hover:bg-neutral-300"
-        }
-        type={"submit"}
-        disabled={!isFormValid}  // Deshabilitamos el botón si el número no es válido
+        onClick={() => updateCount((count ?? 0) - 1)}
+        disabled={isSubmitting}
+        className="bg-red-500 hover:bg-red-600 text-white rounded-full px-6 py-3 text-2xl"
       >
-        Enviar
+        –
       </button>
-    </form>
+
+      <div className="text-6xl font-bold flex items-center justify-center">
+        {count !== null ? (
+          count
+        ) : (
+          <ReactLoading
+            type="spin"
+            color="#6b7280"
+            height={50}
+            width={50} 
+          />
+        )}
+      </div>
+
+      <button
+        onClick={() => updateCount((count ?? 0) + 1)}
+        disabled={isSubmitting}
+        className="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-3 text-2xl"
+      >
+        +
+      </button>
+    </div>
+
   );
 }
