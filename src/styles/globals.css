@@ -8,3 +8,9 @@
     color: white;
   }
 }
+
+.hits {
+  font-size: 5.75em;
+  font-weight: bolder;
+  text-transform: uppercase;
+}
