@@ -43,14 +43,14 @@ export default function Counter() {
       <button
         onClick={() => handleUpdateCount((count ?? 0) - 1)}
         disabled={isSubmitting}
-        className="font-mono bg-zinc-800 text-gray-100 px-6 py-3 text-3xl rounded-full shadow-md hover:bg-zinc-700 hover:shadow-lg transition-all"
+        className="font-mono bg-zinc-800 text-gray-100 px-6 py-3 sm:text-6xl text-3xl rounded-full shadow-md hover:bg-zinc-700 hover:shadow-lg transition-all"
       >
         –
       </button>
 
       {/* CONTADOR */}
-      <div className="w-40 h-40 border-8 border-gray-400 rounded-full flex items-center justify-center">
-        <div id="result" className={`hits ${orbitron.className}`}>
+      <div className="w-40 h-40 sm:w-80 sm:h-80 border-8 border-gray-400 rounded-full flex items-center justify-center">
+        <div id="result" className={`${orbitron.className} sm:text-8xl text-6xl text-gray-100 font-bold uppercase`}>
           {count !== null ? (
             count
           ) : (
@@ -68,7 +68,7 @@ export default function Counter() {
       <button
         onClick={() => handleUpdateCount((count ?? 0) + 1)}
         disabled={isSubmitting}
-        className="font-mono bg-zinc-800 text-gray-100 px-6 py-3 text-3xl rounded-full shadow-md hover:bg-zinc-700 hover:shadow-lg transition-all"
+        className="font-mono bg-zinc-800 text-gray-100 px-6 py-3 sm:text-6xl text-3xl rounded-full shadow-md hover:bg-zinc-700 hover:shadow-lg transition-all"
       >
         +
       </button>
