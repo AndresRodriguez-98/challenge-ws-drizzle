@@ -16,19 +16,18 @@
   - [X] Leer el valor actual del contador
   - [X] Aumentar o disminuir el valor
   - [X] Guardar la fecha/hora del ultimo cambio
-- [ ] Configurar un mecanismo para reiniciar el contador si pasaron 20 minutos sin cambios
-  - [ ] Puede usarse una funcion programada (CRON job o Edge Function)
-- [ ] agregarle al next.config el ppr incremental para el streaming del counter
+- [ ] Configurar un mecanismo para reiniciar el contador si pasaron 20 minutos sin cambios (puede usarse una funcion programada (CRON job o Edge Function)).
+- [ ] Agregarle al next.config el ppr incremental para el streaming del counter
 
 ## Interfaz de usuario
 - [X] Mostrar el valor del contador en pantalla desde el backend
-- [ ] Agregar botones para incrementar y disminuir el contador
-- [ ] Asegurarse de que haya respuesta visual durante la carga o actualización
-- [ ] Aplicar un disenio basico con estilos claros
+- [X] Agregar botones para incrementar y disminuir el contador
+- [X] Asegurarse de que haya respuesta visual durante la carga o actualización
+- [X] Aplicar un disenio basico con estilos claros
 
 ## Publicacion
-- [ ] Conectar el proyecto a Vercel para hacer el deploy
-- [ ] Configurar las variables de entorno en la plataforma de deploy
+- [X] Conectar el proyecto a Vercel para hacer el deploy
+- [X] Configurar las variables de entorno en la plataforma de deploy
 - [ ] Verificar que funcione correctamente en produccion
 
 ## Documentacion del proyecto

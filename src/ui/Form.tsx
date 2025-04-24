@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import ReactLoading from "react-loading";
 import { Orbitron } from "next/font/google";
+import { getCounter, updateCounter } from "@/app/actions";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -15,35 +16,24 @@ export default function Counter() {
 
   useEffect(() => {
     const fetchValue = async () => {
-      const res = await fetch("/api/get");
-      const data = await res.json();
-
+      const data = await getCounter();  // Ahora llama a la server action para obtener el contador
       if (data.length > 0) {
         setCount(data[0].value);
       }
       setIsSubmitting(false);
-
     };
 
     fetchValue();
   }, []);
+    
 
-  const updateCount = async (newValue: number) => {
-    setIsSubmitting(true);
-    const res = await fetch("/api/insert", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ counterValue: newValue }),
-    });
-
-    if (res.ok) {
+  const handleUpdateCount = async (newValue: number) => {
+    const res = await updateCounter(newValue);  // lo mismo que antes, lo hacemos desde el actions
+    if (res) {
       setCount(newValue);
     } else {
       console.error("Error al actualizar el contador");
     }
-
     setIsSubmitting(false);
   };
 
@@ -51,7 +41,7 @@ export default function Counter() {
     // BOTON DE RESTAR
     <div className="flex items-center gap-6 my-8">
       <button
-        onClick={() => updateCount((count ?? 0) - 1)}
+        onClick={() => handleUpdateCount((count ?? 0) - 1)}
         disabled={isSubmitting}
         className="font-mono bg-zinc-800 text-gray-100 px-6 py-3 text-3xl rounded-full shadow-md hover:bg-zinc-700 hover:shadow-lg transition-all"
       >
@@ -76,7 +66,7 @@ export default function Counter() {
 
       {/* BOTON DE SUMAR */}
       <button
-        onClick={() => updateCount((count ?? 0) + 1)}
+        onClick={() => handleUpdateCount((count ?? 0) + 1)}
         disabled={isSubmitting}
         className="font-mono bg-zinc-800 text-gray-100 px-6 py-3 text-3xl rounded-full shadow-md hover:bg-zinc-700 hover:shadow-lg transition-all"
       >
