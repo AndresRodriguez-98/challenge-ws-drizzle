@@ -1,55 +1,80 @@
-"use client";
+'use client';
 
-import { FormEvent, useState } from "react";
+import React, { useState, useEffect } from "react";
+import ReactLoading from "react-loading";
+import { Orbitron } from "next/font/google";
+import { getCounter, updateCounter } from "@/app/actions";
 
-export default function Form() {
-  const [counterValue, setCounterValue] = useState<number | string>("");
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: "600",
+});
 
-  // Validamos que el número esté presente y sea un número válido
-  const isFormValid: Boolean = counterValue !== "" && !isNaN(Number(counterValue));
+export default function Counter() {
+  const [value, setValue] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const formHandler = async (e: FormEvent) => {
-    e.preventDefault();
+  // capturamos el ultimo valor de la db
+  useEffect(() => {
+    const fetchValue = async () => {
+      setIsSubmitting(true);
+      const data = await getCounter();  // Ahora llama a la server action para obtener el contador
+      if (data.length > 0) {
+        setValue(data[0].value);
+      }
+      setIsSubmitting(false);
+    };
 
-    // Hacemos el fetch para enviar el número a la base de datos
-    const res = await fetch("/api/insert", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ counterValue }),
-    });
+    fetchValue();
+  }, []);
+    
 
-    if (res.ok) {
-      setCounterValue("");  // Limpiamos el valor si la inserción fue exitosa
+  const handleUpdateCount = async (newValue: number) => {
+    const res = await updateCounter(newValue);  // lo mismo que antes, lo hacemos desde el actions
+    if (res) {
+      setValue(newValue);
+    } else {
+      console.error("Error al actualizar el contador");
     }
-
-    if (!res.ok) {
-      // Mantener el valor del input si hubo algún error
-      console.error("Error al insertar el número");
-    }
+    setIsSubmitting(false);
   };
 
   return (
-    <form onSubmit={formHandler} className={"my-6"}>
-      <input
-        className={"bg-neutral-900 rounded-xl py-3 px-4"}
-        type={"number"}  // Cambiamos a tipo "number"
-        name={"counterValue"}
-        placeholder={"Enter number"}
-        required={true}
-        value={counterValue}
-        onChange={(e) => setCounterValue(e.target.value)}  // Actualizamos el estado con el valor del input
-      />
+    // BOTON DE RESTAR
+    <div className="flex items-center gap-6 my-8">
       <button
-        className={
-          "bg-white text-black rounded-xl py-2 px-4 mx-3 hover:bg-neutral-300"
-        }
-        type={"submit"}
-        disabled={!isFormValid}  // Deshabilitamos el botón si el número no es válido
+        onClick={() => handleUpdateCount((value ?? 0) - 1)}
+        disabled={isSubmitting}
+        className="font-mono bg-zinc-800 text-gray-100 px-6 py-3 sm:text-6xl text-3xl rounded-full shadow-md hover:bg-zinc-700 hover:shadow-lg transition-all"
       >
-        Enviar
+        –
       </button>
-    </form>
+
+      {/* CONTADOR */}
+      <div className="w-40 h-40 sm:w-80 sm:h-80 border-8 border-gray-400 rounded-full flex items-center justify-center">
+        <div id="result" className={`${orbitron.className} sm:text-8xl text-6xl text-gray-100 font-bold uppercase`}>
+          {value !== null ? (
+            value
+          ) : (
+            <ReactLoading
+              type="spin"
+              color="#6b7280"
+              height={50}
+              width={50}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* BOTON DE SUMAR */}
+      <button
+        onClick={() => handleUpdateCount((value ?? 0) + 1)}
+        disabled={isSubmitting}
+        className="font-mono bg-zinc-800 text-gray-100 px-6 py-3 sm:text-6xl text-3xl rounded-full shadow-md hover:bg-zinc-700 hover:shadow-lg transition-all"
+      >
+        +
+      </button>
+    </div>
+
   );
 }
