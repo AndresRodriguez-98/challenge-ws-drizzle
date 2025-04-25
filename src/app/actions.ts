@@ -1,31 +1,41 @@
 // Logica de negocio, del lado del servidor. Acá es donde corresponde hacer el reseteo a los 20 min.
-'use server'
+"use server";
 
-import { InsertValue, SelectCounter, ResetCounter } from "@/db/Queries";
+import { SelectCounter, ResetCounter, updateCounter } from "@/db/Queries";
+import timeHelper from "@/utils/timeHelper";
 
-export async function updateCounter(counterValue: number) {
-  const res = await InsertValue([{ value: counterValue }]);
-  return res;
+export async function updateModel(sign: String) {
+    const res = await SelectCounter();
+    console.log(res);
+    const diff = timeHelper(res[0].createdAt);
+    console.log(diff);
+    // si pasaron 20 minutos, reseteo el contador
+    if (diff > 1) {
+        const reset = await ResetCounter();
+        return reset;
+    }
+
+    if (sign === "+") {
+        const newCounter = { value: res[0].value + 1 };
+        const updatedData = await updateCounter(newCounter);
+        return updatedData[0].value;
+    }
+    if (sign === "-") {
+        const newCounter = { value: res[0].value - 1 };
+        const updatedData = await updateCounter(newCounter);
+        return updatedData[0].value;
+    }
 }
-export async function getCounter() {
-  const res = await SelectCounter();
-  return res;
+
+export async function getModel() {
+    const res = await SelectCounter(); // agarro el ultimo
+    const diff = timeHelper(res[0].createdAt);
+
+    if (diff > 20) {
+        // si pasaron 20 minutos, reseteo el contador
+        const reset = await ResetCounter();
+        return reset;
+    }
+    // si no pasaron 20 minutos, devuelvo el contador actual
+    return res[0].value;
 }
-
-/* ASI SERIA SI NO USAMOS UN CRONJOB, PERO SOLO SE RESETEARIA EL NUMERO CUANDO SE USE LA APP.
-
-  export async function getCounter() {
-  const res = await SelectCounter();
-
-  const lastCounter = res[0]; // ultimo contador
-  const lastDate = new Date(lastCounter.createdAt); // ultima fecha
-  const currentDate = new Date(); // fecha actual
-  const diff = Math.abs(currentDate.getTime() - lastDate.getTime()); // diferencia entre fechas
-  const diffMinutes = Math.floor(diff / (1000 * 60)); // diferencia en minutos
-  if (diffMinutes > 20) {
-    const reset = await ResetCounter(); // reseteo el contador
-    return reset; // devuelvo el numero 0
-  }
-  // si no se resetea, devuelvo el contador actual
-  return res;
-} */

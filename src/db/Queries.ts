@@ -2,21 +2,42 @@
 
 import { Insert, Select, counter } from "./schema";
 import { supabase } from "./supabase";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
-export async function InsertValue(counterValue: Insert[]): Promise<Insert[]> {
-    const insertedValueData = await supabase.insert(counter).values(counterValue).returning();
-    console.log("Datos insertados:", insertedValueData);
-    return insertedValueData;
-}
+export async function updateCounter(newCounter: { value: number }) {
+    // Paso 1: obtenemos el último registro
+    const latest = await supabase.select().from(counter).orderBy(desc(counter.id)).limit(1);
+  
+    if (!latest || latest.length === 0) {
+      throw new Error("No hay registros para actualizar.");
+    }
+  
+    const lastId = latest[0].id;
+  
+    // Paso 2: actualizamos usando ese id
+    const updatedData = await supabase
+      .update(counter)
+      .set(newCounter)
+      .where(eq(counter.id, lastId))
+      .returning();
+  
+    return updatedData;
+  }
 
 export async function SelectCounter(): Promise<Select[]> {
-    const valueData = await supabase.select().from(counter).orderBy(desc(counter.id)).limit(1);
+    let valueData = await supabase.select().from(counter).orderBy(desc(counter.id)).limit(1);
+    if(valueData.length === 0) {
+        valueData = await supabase.insert(counter).values({ value: 0 }).returning();
+    }
     return valueData;
 }
 
-export async function ResetCounter(): Promise<Insert[]> {
-    const reset = await supabase.insert(counter).values({ value: 0 }).returning();
-    console.log("Contador reseteado:", reset);
-    return reset; // devuelvo el numero 0
+export async function ResetCounter(): Promise<number> {
+    const resetData = await supabase.insert(counter).values({ value: 0 }).returning();
+    //const value = resetData[0]?.value ?? 0; 
+    const value = resetData[0].value
+    console.log("Contador reseteado:", value);
+    return value;
 }
+
+// const updatedData = await supabase.update(counter).set(newCounter).returning();
