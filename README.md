@@ -7,7 +7,7 @@ Cada 20 minutos de inactividad, el contador se reinicia automáticamente y guard
 
 # Instrucciones para ejecutar la aplicacion (How to use)
 Para la version deployada:
-- Ingresar al sitio https://challenge-ws-drizzle-n9vjbstts-andresrodriguez-98s-projects.vercel.app/
+- Ingresar al sitio https://challenge-ws-drizzle.vercel.app/
 Para hostearlo localmente:
 - Ejecutar en la terminal los siguientes comandos:
 1) git clone https://github.com/AndresRodriguez-98/challenge-ws-drizzle.git
