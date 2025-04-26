@@ -1,4 +1,3 @@
-import { SelectCounter} from "@/db/Queries";
 import Counter from "@/ui/Counter";
 import { orbitron } from "@/lib/fonts";
 import List from "@/ui/List";

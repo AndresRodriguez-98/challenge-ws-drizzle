@@ -35,7 +35,10 @@ export async function getModel() {
         return reset;
     }
     // si no pasaron 20 minutos, devuelvo el contador actual
-    return res[0].value;
+    return {
+        value: res[0].value,
+        diff,
+      };
 }
 
 export async function getAllModels() {
