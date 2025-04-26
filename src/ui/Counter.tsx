@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ReactLoading from "react-loading";
 import { orbitron } from "@/lib/fonts";
 import { getModel, updateModel } from "@/app/actions";
@@ -27,13 +27,14 @@ export default function Counter() {
 
 
   const handleUpdateCount = async (sign: string) => {
+    setIsSubmitting(true); // <-- empieza el loading 
     const newValue = await updateModel(sign);  // lo mismo que antes, lo hacemos desde el actions
     if (newValue) {
       setValue(newValue);
     } else {
       console.error("Error al actualizar el contador");
     }
-    //setIsSubmitting(false);
+    //setIsSubmitting(false); acá no hace falta porque ya lo manejamos en el useEffect
   };
 
   return (

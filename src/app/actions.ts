@@ -1,7 +1,7 @@
 // Logica de negocio, del lado del servidor. Acá es donde corresponde hacer el reseteo a los 20 min.
 "use server";
 
-import { SelectCounter, ResetCounter, updateCounter } from "@/db/Queries";
+import { SelectCounter, ResetCounter, updateCounter, SelectAllCounters } from "@/db/Queries";
 import timeHelper from "@/utils/timeHelper";
 
 export async function updateModel(sign: String) {
@@ -36,4 +36,9 @@ export async function getModel() {
     }
     // si no pasaron 20 minutos, devuelvo el contador actual
     return res[0].value;
+}
+
+export async function getAllModels() {
+    const res = await SelectAllCounters();
+    return res;
 }

@@ -1,6 +1,6 @@
 // aca solo nos encargamos de hacer las consultas a la base de datos e interactuar con ella.
 
-import { Insert, Select, counter } from "./schema";
+import { Select, counter } from "./schema";
 import { supabase } from "./supabase";
 import { desc, eq } from "drizzle-orm";
 
@@ -30,6 +30,11 @@ export async function SelectCounter(): Promise<Select[]> {
         valueData = await supabase.insert(counter).values({ value: 0 }).returning();
     }
     return valueData;
+}
+
+export async function SelectAllCounters(): Promise<Select[]> {
+    const allData = await supabase.select().from(counter).orderBy(counter.id);
+    return allData;
 }
 
 export async function ResetCounter(): Promise<number> {
