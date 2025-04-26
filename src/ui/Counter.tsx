@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import ReactLoading from "react-loading";
 import { orbitron } from "@/lib/fonts";
 import { getModel, updateModel } from "@/app/actions";
-import timeHelper from "@/utils/timeHelper";
 
 export default function Counter() {
   const [value, setValue] = useState<number | null>(null);
@@ -32,7 +31,7 @@ export default function Counter() {
     };
 
     fetchValue();
-  }, []);
+  }, [value]);
 
 
   const handleUpdateCount = async (sign: string) => {
