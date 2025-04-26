@@ -6,11 +6,9 @@ import timeHelper from "@/utils/timeHelper";
 
 export async function updateModel(sign: String) {
     const res = await SelectCounter();
-    console.log(res);
     const diff = timeHelper(res[0].createdAt);
-    console.log(diff);
     // si pasaron 20 minutos, reseteo el contador
-    if (diff > 1) {
+    if (diff >= 20) {
         const reset = await ResetCounter();
         return reset;
     }
@@ -31,7 +29,7 @@ export async function getModel() {
     const res = await SelectCounter(); // agarro el ultimo
     const diff = timeHelper(res[0].createdAt);
 
-    if (diff > 20) {
+    if (diff >= 20) {
         // si pasaron 20 minutos, reseteo el contador
         const reset = await ResetCounter();
         return reset;
