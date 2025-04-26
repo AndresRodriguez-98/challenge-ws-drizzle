@@ -30,11 +30,11 @@
 - [X] Verificar que funcione correctamente en produccion
 
 ## Documentacion del proyecto
-- [ ] Escribir un README con instrucciones para levantar el proyecto localmente
-- [ ] Explicar como esta estructurado el proyecto y como funciona la lógica
+- [X] Escribir un README con instrucciones para levantar el proyecto localmente
+- [X] Explicar como esta estructurado el proyecto y como funciona la lógica
 - [X] Mencionar cualquier extra agregado o decision tecnica tomada
 
 ## Mejoras opcionales
 - [X] Implementar historial de acciones sobre el contador
 - [X] Agregar loading para mejorar la experiencia de usuario
-- [ ] Mostrar tiempo restante hasta el reinicio automatico
+- [X] Mostrar tiempo restante hasta el reinicio automatico
